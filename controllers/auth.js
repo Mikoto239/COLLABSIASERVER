@@ -18,7 +18,7 @@ exports.signup = async (req, res, next) => {
     }
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: '373547344231-ft1oo9dvva0qkbvu4aqhv8f4f82dunbu.apps.googleusercontent.com',
+      audience: '373547344231-6j6o6t1hnnpke6j59nj9g2l51hgk5nup.apps.googleusercontent.com',
     });
     const user = await User.create(req.body);
     const tokenToSend = await user.webtokenjwt();
