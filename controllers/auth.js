@@ -2,7 +2,7 @@ const User = require('../models/user');
 const Code = require('../models/code');
 const ErrorRespond = require('../utils/errorResponds');
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client("373547344231-ft1oo9dvva0qkbvu4aqhv8f4f82dunbu.apps.googleusercontent.com");
+const client = new OAuth2Client("364065480016-q7eubgp3n4qjeea2cl5cl3c4seg1qeff.apps.googleusercontent.com");
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const jwt = require('jsonwebtoken');
@@ -12,20 +12,31 @@ exports.signup = async (req, res, next) => {
   const { email, role, token } = req.body;
   
   try {
+    // Check if the user already exists
     const userExist = await User.findOne({ email });
     if (userExist) {
       return next(new ErrorRespond("Email is already in use!", 400));
     }
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: '373547344231-6j6o6t1hnnpke6j59nj9g2l51hgk5nup.apps.googleusercontent.com',
-    });
+
+    // Verify the ID token
+    let ticket;
+    try {
+      ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: '364065480016-q7eubgp3n4qjeea2cl5cl3c4seg1qeff.apps.googleusercontent.com',
+      });
+    } catch (error) {
+      return next(new ErrorRespond("Invalid token provided!", 401));
+    }
+
+    // Create the user if the token is verified
     const user = await User.create(req.body);
     const tokenToSend = await user.webtokenjwt();
 
+    // Send the success response
     const successResponse = {
       success: true,
-      token: tokenToSend
+      token: tokenToSend,
     };
 
     res.status(200).json(successResponse);
@@ -41,7 +52,7 @@ exports.login = async (req, res, next) => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: '373547344231-ft1oo9dvva0qkbvu4aqhv8f4f82dunbu.apps.googleusercontent.com',
+      audience: '364065480016-q7eubgp3n4qjeea2cl5cl3c4seg1qeff.apps.googleusercontent.com',
     });
 
     const payload = ticket.getPayload();
@@ -78,7 +89,7 @@ exports.login = async (req, res, next) => {
   } catch (error) {
     const verificationErrorResponse = {
       success: false,
-      message: 'Unable to verify Google token'
+      message: 'Unable to verify Googleasd token'
     };
 
     console.log('JSON Response:', JSON.stringify(verificationErrorResponse, null, 2));
