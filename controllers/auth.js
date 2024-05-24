@@ -2,7 +2,7 @@ const User = require('../models/user');
 const Code = require('../models/code');
 const ErrorRespond = require('../utils/errorResponds');
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client("373547344231-ft1oo9dvva0qkbvu4aqhv8f4f82dunbu.apps.googleusercontent.com");
+const client = new OAuth2Client("373547344231-uugg2iqm8p52tmq9iptiscn3905h1dlo.apps.googleusercontent.com");
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const jwt = require('jsonwebtoken');
@@ -23,7 +23,7 @@ exports.signup = async (req, res, next) => {
     try {
       ticket = await client.verifyIdToken({
         idToken: token,
-        audience: '373547344231-ft1oo9dvva0qkbvu4aqhv8f4f82dunbu.apps.googleusercontent.com',
+        audience: '373547344231-uugg2iqm8p52tmq9iptiscn3905h1dlo.apps.googleusercontent.com',
       });
     } catch (error) {
       return next(new ErrorRespond("Invalid token provided!", 401));
@@ -52,7 +52,7 @@ exports.login = async (req, res, next) => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: '364065480016-q7eubgp3n4qjeea2cl5cl3c4seg1qeff.apps.googleusercontent.com',
+      audience: '373547344231-uugg2iqm8p52tmq9iptiscn3905h1dlo.apps.googleusercontent.com',
     });
 
     const payload = ticket.getPayload();
